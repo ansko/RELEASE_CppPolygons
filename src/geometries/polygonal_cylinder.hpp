@@ -9,11 +9,14 @@
 #include "../algebra/matrix.hpp"
 #include "point.hpp"
 #include "polygon.hpp"
+#include "polygonal_polyhedron.hpp"
 
 
-class PolygonalCylinder
+class PolygonalCylinder : PolygonalPolyhedron
 {
 public:
+    PolygonalCylinder(PolygonalPolyhedron polyhedron);
+    PolygonalCylinder(std::vector<std::shared_ptr<Plane> > plane_ptrs);
     PolygonalCylinder(int verticesNumber, float thickness, float outer_radius);
     PolygonalCylinder(std::shared_ptr<Polygon> top_facet_ptr,
                       std::shared_ptr<Polygon> bot_facet_ptr);
@@ -22,8 +25,8 @@ public:
     std::vector<Polygon> facets();
     bool crosses_other_polygonal_cylinder(
         std::shared_ptr<PolygonalCylinder> other_polygonal_cylinder);
-    virtual bool crosses_box(float box_size_x,
-                             float box_size_y=0, float box_size_z=0);
+    int crosses_box(float box_size_x,
+                        float box_size_y=0, float box_size_z=0);
     void change_by_matrix(Matrix m);
     void translate(float dx, float dy, float dz);
     void rotate_around_x(float angle);

@@ -121,19 +121,25 @@ bool Polygon::contains_point(std::shared_ptr<Point> pt_ptr) {
     return flag_contains_point;
 }; 
 
-bool Polygon::crosses_box(float box_size_x, float box_size_y, float box_size_z) {
+int Polygon::crosses_box(float box_size_x, float box_size_y, float box_size_z) {
     if (std::abs(box_size_y) < std::numeric_limits<float>::epsilon())
         box_size_y = box_size_x;
     if (std::abs(box_size_z) < std::numeric_limits<float>::epsilon())
         box_size_z = box_size_x;
     for (int i = 0; i < _vertices.size(); ++i) {
         auto vertex = _vertices[i];
-        if (vertex.x() < 0 || vertex.x() > box_size_x)
-            return true;
-        if (vertex.y() < 0 || vertex.y() > box_size_y)
-            return true;
-        if (vertex.z() < 0 || vertex.z() > box_size_z)
-            return true;
+        if (vertex.x() < 0)
+            return 1;
+        if(vertex.x() > box_size_x)
+            return 2;
+        if (vertex.y() < 0)
+            return 3;
+        if (vertex.y() > box_size_y)
+            return 4;
+        if (vertex.z() < 0)
+            return 5;
+        if (vertex.z() > box_size_z)
+            return 6;
     }
     return false;
 };

@@ -40,6 +40,8 @@ Vector Vector::operator-(Vector otherVector) {
 }
 
 Vector Vector::operator*(float coefficient) {
+    if (std::abs(coefficient) < std::numeric_limits<float>::epsilon())
+        std::cout << "Warning: multiplication by 0\n";
     float x = this->x() * coefficient;
     float y = this->y() * coefficient;
     float z = this->z() * coefficient;
@@ -47,6 +49,8 @@ Vector Vector::operator*(float coefficient) {
 }
 
 Vector Vector::operator/(float coefficient) {
+    if (std::abs(coefficient) < std::numeric_limits<float>::epsilon())
+        std::cout << "Warning: division by 0\n";
     float x = this->x() / coefficient;
     float y = this->y() / coefficient;
     float z = this->z() / coefficient;

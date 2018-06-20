@@ -26,6 +26,24 @@ Plane::Plane(std::shared_ptr<Point> pt_0_ptr,
     _pt_0_ptr = pt_0_ptr;
     _pt_1_ptr = pt_1_ptr;
     _pt_2_ptr = pt_2_ptr;
+    if (_pt_0_ptr->x() == _pt_1_ptr->x() && _pt_0_ptr->x() == _pt_2_ptr->x()) {
+        _a = 1.f;
+        _b = 0.f;
+        _c = 0.f;
+        _d = -_a;
+    }
+    if (_pt_0_ptr->y() == _pt_1_ptr->y() && _pt_0_ptr->y() == _pt_2_ptr->y()) {
+        _a = 0.f;
+        _b = 1.f;
+        _c = 0.f;
+        _d = -_b;
+    }
+    if (_pt_0_ptr->z() == _pt_1_ptr->z() && _pt_0_ptr->z() == _pt_2_ptr->z()) {
+        _a = 0.f;
+        _b = 0.f;
+        _c = 1.f;
+        _d = -_c;
+    }
     _a = (pt_1_ptr->y() - pt_0_ptr->y()) * (pt_2_ptr->z() - pt_0_ptr->z()) -
          (pt_1_ptr->z() - pt_0_ptr->z()) * (pt_2_ptr->y() - pt_0_ptr->y());
     _b = -(pt_1_ptr->x() - pt_0_ptr->x()) * (pt_2_ptr->z() - pt_0_ptr->z()) +

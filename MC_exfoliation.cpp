@@ -15,6 +15,10 @@
 
 
 int main(int argc, char**argv) {
+    /*
+       1.  Create system of polygonal cylinders by monte-carlo method
+       2.  Study percolation
+    */
 
     // parse settings
     SettingsParser sp("settings");
@@ -44,6 +48,7 @@ int main(int argc, char**argv) {
     p.print_CSG_ternary_reading_settings(
         std::string("one.geo"), arch.fils, arch.shells);
 
+    // study percolation
     PercolationChecker pc(arch.fils, arch.shells);
     std::vector<std::pair<int, int> > intersections = pc.get_intersections();
     std::cout << "intersections number: " << intersections.size() << std::endl;

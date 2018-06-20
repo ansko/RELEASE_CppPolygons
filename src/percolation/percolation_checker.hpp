@@ -1,23 +1,35 @@
 #pragma once
 
 #include <memory>
+#include <set>
 #include <vector>
 
+#include "../geometries/polygonal_polyhedron.hpp"
 #include "../geometries/polygonal_cylinder.hpp"
+#include "../systems_architecture/polyhedronal_system.hpp"
+#include "../systems_architecture/ternary_polygonal_system.hpp"
 
 
 class PercolationChecker
 {
 public:
-    PercolationChecker(
-        std::vector<std::shared_ptr<PolygonalCylinder> > fils,
-        std::vector<std::shared_ptr<PolygonalCylinder> > shells);
-
-    std::vector<std::shared_ptr<PolygonalCylinder> > fils();
-    std::vector<std::shared_ptr<PolygonalCylinder> > shells();
-    std::vector<std::pair<int, int> > get_intersections();
+    std::vector<std::pair<int, int> > get_intersections(
+        TernaryPolygonalSystem system);
+    void convert_intersections_into_percolation();
+    void clean();
+    bool percolation_along_x();
+    bool percolation_along_y();
+    bool percolation_along_z();
 private:
-    std::vector<std::shared_ptr<PolygonalCylinder> > _fils;
-    std::vector<std::shared_ptr<PolygonalCylinder> > _shells;
+    std::vector<std::pair<int, int> > _last_intersections_found;
+    std::vector<int> _last_box_crosses_found; // 0, 1 - x; 2, 3 - y, 4, 5 z
+                                              //     (min, max)
+    float _Lx = 0;
+    float _Ly = 0;
+    float _Lz = 0;
+    bool _percolation_checked=false;
+    bool _percolation_along_x=false;
+    bool _percolation_along_y=false;
+    bool _percolation_along_z=false;
 };
 

@@ -1,6 +1,28 @@
 #include "polygonal_cylinder.hpp"
 
 
+PolygonalCylinder::PolygonalCylinder(PolygonalPolyhedron polyhedron) {
+    _vertices_number = polyhedron.polygon_ptrs()[0]->vertices().size();
+    _top_facet_ptr = polyhedron.polygon_ptrs()[0];
+    _bot_facet_ptr = polyhedron.polygon_ptrs()[1];
+    for (int idx = 2; idx < _vertices_number; ++idx)
+        _facets.push_back(*polyhedron.polygon_ptrs()[idx]);
+    _outer_radius = Vector(_top_facet_ptr->pt_center_ptr(),
+                           std::make_shared<Point>(
+                               _top_facet_ptr->vertices()[0])).length();
+    _thickness = Vector(std::make_shared<Point>(
+                               _top_facet_ptr->vertices()[0]),
+                        std::make_shared<Point>(
+                               _bot_facet_ptr->vertices()[0])).length();
+    _central_angle = 2 * M_PI / _vertices_number;
+    _edge_length = _outer_radius * 2 * sin(M_PI / _vertices_number);
+    _polygon_ptrs = {_top_facet_ptr, _bot_facet_ptr};
+    for (auto facet : _facets)
+        _polygon_ptrs.push_back(std::make_shared<Polygon>(facet));
+    _top_facet_center_ptr = std::make_shared<Point>(0, 0, _thickness / 2);
+    _bot_facet_center_ptr = std::make_shared<Point>(0, 0, -_thickness / 2);
+}
+
 PolygonalCylinder::PolygonalCylinder(
     int vertices_number,
     float thickness,
@@ -42,6 +64,9 @@ PolygonalCylinder::PolygonalCylinder(
     }
     _top_facet_ptr = std::make_shared<Polygon>(top_vertices);
     _bot_facet_ptr = std::make_shared<Polygon>(bot_vertices);
+    _polygon_ptrs = {_top_facet_ptr, _bot_facet_ptr};
+    for (auto facet : _facets)
+        _polygon_ptrs.push_back(std::make_shared<Polygon>(facet));
     _top_facet_center_ptr = std::make_shared<Point>(0, 0, thickness / 2);
     _bot_facet_center_ptr = std::make_shared<Point>(0, 0, -thickness / 2);
 };
@@ -237,7 +262,7 @@ bool PolygonalCylinder::crosses_other_polygonal_cylinder(
     return false;
 }
 
-bool PolygonalCylinder::crosses_box(float box_size_x,
+int PolygonalCylinder::crosses_box(float box_size_x,
         float box_size_y, float box_size_z) {
 
     if (std::abs(box_size_y) < std::numeric_limits<float>::epsilon())
@@ -245,9 +270,11 @@ bool PolygonalCylinder::crosses_box(float box_size_x,
     if (std::abs(box_size_z) < std::numeric_limits<float>::epsilon())
         box_size_z = box_size_x;
     std::vector<Polygon> polygons = {*_top_facet_ptr, *_bot_facet_ptr};
-    for(int i = 0; i < 2; i++)
-        if (polygons[i].crosses_box(box_size_x, box_size_y, box_size_z))
-            return true;
+    for(int i = 0; i < 2; i++) {
+        int a = polygons[i].crosses_box(box_size_x, box_size_y, box_size_z);
+        if (a > 0)
+            return a;
+    }
     return false;
 };
 
