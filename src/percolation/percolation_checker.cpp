@@ -4,21 +4,24 @@
 
 std::vector<std::pair<int, int> > PercolationChecker::get_intersections(
     TernaryPolygonalSystem system) {
+        _system = system;
         _Lx = system.Lx();
         _Ly = system.Ly();
         _Lz = system.Lz();
         std::vector<int> box_crosses;
         std::vector<std::pair<int, int> > intersections;
         int shells_number = system.shells().size();
-        for(int idx = 0; idx < shells_number; idx++) {
+        for(int idx = 0; idx < shells_number; ++idx) {
             if (system.shells()[idx]->crosses_box(_Lx, _Ly, _Lz))
                 box_crosses.push_back(1);
-            for(int idx_other = 0; idx_other < shells_number; idx_other++) {
+            for(int idx_other = 0; idx_other < shells_number; ++idx_other) {
                 if (idx == idx_other)
                     continue;
                 if (system.shells()[idx]->crosses_other_polygonal_cylinder(
-                        system.shells()[idx_other])) {
-                    std::cout << "inter " << idx << " " << idx_other << std::endl;
+                        system.shells()[idx_other]) &&
+                    system.shells()[idx_other]->crosses_other_polygonal_cylinder(
+                        system.shells()[idx])) {
+                    //std::cout << "inter " << idx << " " << idx_other << std::endl;
                     intersections.push_back(std::pair<int, int>(idx, idx_other));
                 }
             }
@@ -55,11 +58,46 @@ void PercolationChecker::convert_intersections_into_percolation() {
             clusters.push_back(new_cluster);
         }
     }
-    std::cout << "ok, " << clusters.size() << " clusters found\n";
+    std::cout << clusters.size() << " clusters found\n";
+
+    float ove_xmin = _Lx;
+    float ove_ymin = _Ly;
+    float ove_zmin = _Lz;
+    float ove_xmax = 0;
+    float ove_ymax = 0;
+    float ove_zmax = 0;
     for (auto cluster : clusters) {
-        for (int el : cluster)
-            std::cout << el << " ";
-        std::cout << "\n";
+        float xmin = _Lx;
+        float ymin = _Ly;
+        float zmin = _Lz;
+        float xmax = 0;
+        float ymax = 0;
+        float zmax = 0;
+        for (auto polyhedron_idx : cluster)
+            for (auto poly : _system.shells()[polyhedron_idx]->facets())
+                for (auto vertex : poly.vertices()) {
+                    float x = vertex.x();
+                    float y = vertex.y();
+                    float z = vertex.z();
+                    if (x < xmin)
+                        xmin = x;
+                    if (y < ymin)
+                        ymin = y;
+                    if (z < zmin)
+                        zmin = z;
+                    if (x > xmax)
+                        xmax = x;
+                    if (y > ymax)
+                        ymax = y;
+                    if (z > zmax)
+                        zmax = z;
+                };
+        if (xmin <= 0 && xmax >= _Lx)
+            _percolation_along_x = true;
+        if (ymin <= 0 && ymax >= _Ly)
+            _percolation_along_y = true;
+        if (zmin <= 0 && zmax >= _Lz)
+            _percolation_along_z = true;
     }
 }
 

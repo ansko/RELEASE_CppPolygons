@@ -47,13 +47,10 @@ bool Polygon::crosses_other_polygon(std::shared_ptr<Polygon> other_polygon_ptr) 
                 std::cout << "Error! cross_pt is not set but requested\n";
             std::shared_ptr<Point> pt_cross_ptr = other_plane.pt_cross_ptr();
             if (other_polygon_ptr->contains_point(pt_cross_ptr)) {
-                flag_self_crosses_other = true;
-                break;
+                //std::cout << "self crosses other\n";
+                return true;
             }
         }
-    }
-    if (flag_self_crosses_other == true) {
-            return true;
     }
     for (int i = 0; i < other_vertices.size(); ++i) {
         Point pt_beg = other_vertices[i];
@@ -68,19 +65,16 @@ bool Polygon::crosses_other_polygon(std::shared_ptr<Polygon> other_polygon_ptr) 
         if (plane.is_crossed_by_line_segment(ls_ptr)) {
             std::shared_ptr<Point> pt_cross_ptr = plane.pt_cross_ptr();
             if (this->contains_point(pt_cross_ptr)) {
-                flag_other_crosses_self = true;
-                break;
+                //std::cout << "Other crosses self\n";
+                return true;
             }
         }
     }
-    if (flag_other_crosses_self == true)
-        return true;
     return false;
 };
 
 bool Polygon::contains_point(std::shared_ptr<Point> pt_ptr) {
     int s = _vertices.size();
-    bool flag_contains_point = false;
     Vector center, other_center;
     for (auto vertex : _vertices)
         center = center + Vector(vertex.x(), vertex.y(), vertex.z());
@@ -111,14 +105,16 @@ bool Polygon::contains_point(std::shared_ptr<Point> pt_ptr) {
                             std::make_shared<Point>(pt_1));
         Vector v0pt = Vector(std::make_shared<Point>(pt_0),
                              pt_ptr);
-        float tmp = v02.cross_product_ptr(
+        float volume = v02.cross_product_ptr(
                            std::make_shared<Vector>(v01))
                        ->scalar_product(v01.cross_product_ptr(
                            std::make_shared<Vector>(v0pt)));
-        if (tmp > std::numeric_limits<float>::epsilon())
-            flag_contains_point = true;
+        if (volume > std::numeric_limits<float>::epsilon()) {
+            //std::cout << volume << std::endl;
+            return true;
+        }
     }
-    return flag_contains_point;
+    return false;
 }; 
 
 int Polygon::crosses_box(float box_size_x, float box_size_y, float box_size_z) {
@@ -126,20 +122,21 @@ int Polygon::crosses_box(float box_size_x, float box_size_y, float box_size_z) {
         box_size_y = box_size_x;
     if (std::abs(box_size_z) < std::numeric_limits<float>::epsilon())
         box_size_z = box_size_x;
+    int flag = 0;
     for (int i = 0; i < _vertices.size(); ++i) {
         auto vertex = _vertices[i];
         if (vertex.x() < 0)
-            return 1;
+            flag += 1;
         if(vertex.x() > box_size_x)
-            return 2;
+            flag += 2;
         if (vertex.y() < 0)
-            return 3;
+            flag += 3;
         if (vertex.y() > box_size_y)
-            return 4;
+            flag += 4;
         if (vertex.z() < 0)
-            return 5;
+            flag += 5;
         if (vertex.z() > box_size_z)
-            return 6;
+            flag += 6;
     }
-    return false;
+    return flag;
 };

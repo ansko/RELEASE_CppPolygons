@@ -175,8 +175,10 @@ bool PolygonalCylinder::crosses_other_polygonal_cylinder(
                                        _thickness*_thickness/4);
     if (centers_distance > very_far_distance)
         return false;
-    else if (centers_distance < very_close_distance)
+    else if (centers_distance < very_close_distance) {
+        //std::cout << "Close\n";
         return true;
+    }
     // starting precise checking
     // if main axes of the cylinders lie on far lines
     // http://en.wikipedia.org/wiki/Skew_lines#Distance_between_two_skew_lines
@@ -255,8 +257,11 @@ bool PolygonalCylinder::crosses_other_polygonal_cylinder(
                 other_pts.push_back(vertex);
             }
             other_poly = Polygon(other_pts);
-            if (poly.crosses_other_polygon(std::make_shared<Polygon>(other_poly)))
+            if (poly.crosses_other_polygon(
+                    std::make_shared<Polygon>(other_poly))) {
+                //std::cout << "Precise\n";
                 return true;
+            }
         }
     }
     return false;

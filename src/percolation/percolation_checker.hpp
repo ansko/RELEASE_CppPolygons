@@ -22,11 +22,11 @@ public:
     bool percolation_along_z();
 private:
     std::vector<std::pair<int, int> > _last_intersections_found;
-    std::vector<int> _last_box_crosses_found; // 0, 1 - x; 2, 3 - y, 4, 5 z
-                                              //     (min, max)
+    std::vector<int> _last_box_crosses_found;
     float _Lx = 0;
     float _Ly = 0;
     float _Lz = 0;
+    TernaryPolygonalSystem _system;
     bool _percolation_checked=false;
     bool _percolation_along_x=false;
     bool _percolation_along_y=false;
