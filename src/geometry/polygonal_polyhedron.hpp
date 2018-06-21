@@ -10,7 +10,7 @@
 class PolygonalPolyhedron
 {
 public:
-    std::vector<std::shared_ptr<Polygon> > polygon_ptrs();
+    const std::vector<Polygon> polygons() const;
 protected:
-    std::vector<std::shared_ptr<Polygon> > _polygon_ptrs;
+    std::vector<Polygon> _polygons;
 };

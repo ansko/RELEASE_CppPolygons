@@ -3,12 +3,12 @@
 #include <string>
 #include <vector>
 
-#include "src/geometries/point.hpp"
-#include "src/geometries/line_segment.hpp"
-#include "src/geometries/vector.hpp"
-#include "src/geometries/plane.hpp"
-#include "src/geometries/polygon.hpp"
-#include "src/geometries/polygonal_cylinder.hpp"
+#include "src/geometry/point.hpp"
+#include "src/geometry/line_segment.hpp"
+#include "src/algebra/vector.hpp"
+#include "src/geometry/plane.hpp"
+#include "src/geometry/polygon.hpp"
+#include "src/geometry/polygonal_cylinder.hpp"
 #include "src/io/csg_printer_polygons.hpp"
 #include "src/percolation/percolation_checker.hpp"
 
@@ -19,7 +19,7 @@ int main(int argc, char**argv) {
        2.  Study percolation
     */
     std::string taks_name("ternary_polygonal_cylinders");
-    SettingsParser sp("settings", "ternary_polygonal_cylinders");
+    SettingsParser sp("settings", "MC");
     if (!sp.success_of_parsing()) {
         std::cout << "Error: parsed settings are not OK\n";
         return 0;
@@ -32,13 +32,25 @@ int main(int argc, char**argv) {
         Ly = std::stof(sp.get_setting(std::string("Ly")));
     if (sp.check_setting("Lz"))
         Ly = std::stof(sp.get_setting(std::string("Lz")));
+    if (!sp.check_setting("thickness"))
+        throw MyException("No thickness specified");
     float thickness = std::stof(sp.get_setting(std::string("thickness")));
+    if (!sp.check_setting("shell_thickness"))
+        throw MyException("No shell thickness specified");
     float shell_thickness = std::stof(
         sp.get_setting(std::string("shell_thickness")));
+    if (!sp.check_setting("outer_radius"))
+        throw MyException("No outre radius specified");
     float outer_radius = std::stof(sp.get_setting(std::string("outer_radius")));
+    if (!sp.check_setting("vertices_number"))
+        throw MyException("No vertices_number specified");
     int vertices_number = std::stoi(
         sp.get_setting(std::string("vertices_number")));
-    int disks_number = std::stoi(sp.get_setting(std::string("fillers_number")));
+    if (!sp.check_setting("disks_number"))
+        throw MyException("No fillers number specified");
+    int disks_number = std::stoi(sp.get_setting(std::string("disks_number")));
+    if (!sp.check_setting("max_attempts"))
+        throw MyException("No max attempts specified");
     int max_attempts = std::stoi(sp.get_setting(std::string("max_attempts")));
     std::string output_fname = sp.get_setting(std::string("output_fname"));
     //making system

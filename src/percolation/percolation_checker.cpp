@@ -1,9 +1,8 @@
 #include "percolation_checker.hpp"
 
 
-
-std::vector<std::pair<int, int> > PercolationChecker::get_intersections(
-    TernaryPolygonalSystem system) {
+const std::vector<std::pair<int, int> > PercolationChecker::get_intersections(
+    TernaryPolygonalSystem &system) {
         _system = system;
         _Lx = system.Lx();
         _Ly = system.Ly();
@@ -12,16 +11,15 @@ std::vector<std::pair<int, int> > PercolationChecker::get_intersections(
         std::vector<std::pair<int, int> > intersections;
         int shells_number = system.shells().size();
         for(int idx = 0; idx < shells_number; ++idx) {
-            if (system.shells()[idx]->crosses_box(_Lx, _Ly, _Lz))
+            if (system.shells()[idx].crosses_box(_Lx, _Ly, _Lz))
                 box_crosses.push_back(1);
             for(int idx_other = 0; idx_other < shells_number; ++idx_other) {
                 if (idx == idx_other)
                     continue;
-                if (system.shells()[idx]->crosses_other_polygonal_cylinder(
+                if (system.shells()[idx].crosses_other_polygonal_cylinder(
                         system.shells()[idx_other]) &&
-                    system.shells()[idx_other]->crosses_other_polygonal_cylinder(
+                    system.shells()[idx_other].crosses_other_polygonal_cylinder(
                         system.shells()[idx])) {
-                    //std::cout << "inter " << idx << " " << idx_other << std::endl;
                     intersections.push_back(std::pair<int, int>(idx, idx_other));
                 }
             }
@@ -59,7 +57,6 @@ void PercolationChecker::convert_intersections_into_percolation() {
         }
     }
     std::cout << clusters.size() << " clusters found\n";
-
     float ove_xmin = _Lx;
     float ove_ymin = _Ly;
     float ove_zmin = _Lz;
@@ -74,7 +71,7 @@ void PercolationChecker::convert_intersections_into_percolation() {
         float ymax = 0;
         float zmax = 0;
         for (auto polyhedron_idx : cluster)
-            for (auto poly : _system.shells()[polyhedron_idx]->facets())
+            for (auto poly : _system.shells()[polyhedron_idx].facets())
                 for (auto vertex : poly.vertices()) {
                     float x = vertex.x();
                     float y = vertex.y();
@@ -109,19 +106,19 @@ void PercolationChecker::clean() {
     _percolation_along_z=false;
 }
 
-bool PercolationChecker::percolation_along_x() {
+const bool PercolationChecker::percolation_along_x() const {
     if (!_percolation_checked)
         std::cout << "Warning: _percolation_checked is false\n";
     return _percolation_along_x;
 }
 
-bool PercolationChecker::percolation_along_y() {
+const bool PercolationChecker::percolation_along_y() const {
     if (!_percolation_checked)
         std::cout << "Warning: _percolation_checked is false\n";
     return _percolation_along_y;
 }
 
-bool PercolationChecker::percolation_along_z() {
+const bool PercolationChecker::percolation_along_z() const {
     if (!_percolation_checked)
         std::cout << "Warning: _percolation_checked is false\n";
     return _percolation_along_z;

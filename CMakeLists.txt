@@ -9,16 +9,16 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 set (HEADERS
-    src/geometries/point.hpp
-    src/geometries/vector.hpp
+    src/geometry/point.hpp
+    src/algebra/vector.hpp
     src/algebra/matrix.hpp
     src/error_handling/my_exception.hpp
-    src/geometries/line_segment.hpp
-    src/geometries/orthobrick.hpp
-    src/geometries/plane.hpp
-    src/geometries/polygon.hpp
-    src/geometries/polygonal_polyhedron.hpp
-    src/geometries/polygonal_cylinder.hpp
+    src/geometry/line_segment.hpp
+    src/geometry/orthobrick.hpp
+    src/geometry/plane.hpp
+    src/geometry/polygon.hpp
+    src/geometry/polygonal_polyhedron.hpp
+    src/geometry/polygonal_cylinder.hpp
     src/settings/settings_parser.hpp
     src/io/csg_printer_polygons.hpp
     src/systems_architecture/polyhedronal_system.hpp
@@ -27,16 +27,16 @@ set (HEADERS
 )
 
 set (SOURCES
-    src/geometries/point.cpp
-    src/geometries/vector.cpp
+    src/geometry/point.cpp
+    src/algebra/vector.cpp
     src/algebra/matrix.cpp
     src/error_handling/my_exception.cpp
-    src/geometries/line_segment.cpp
-    src/geometries/orthobrick.cpp
-    src/geometries/plane.cpp
-    src/geometries/polygon.cpp
-    src/geometries/polygonal_polyhedron.cpp
-    src/geometries/polygonal_cylinder.cpp
+    src/geometry/line_segment.cpp
+    src/geometry/orthobrick.cpp
+    src/geometry/plane.cpp
+    src/geometry/polygon.cpp
+    src/geometry/polygonal_polyhedron.cpp
+    src/geometry/polygonal_cylinder.cpp
     src/settings/settings_parser.cpp
     src/io/csg_printer_polygons.cpp
     src/systems_architecture/polyhedronal_system.cpp

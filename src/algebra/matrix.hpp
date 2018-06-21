@@ -30,24 +30,37 @@ class Matrix
 {
 public:
     Matrix(int rows_number, int columns_number,
-           MatrixMode mode=MatrixMode::balanced) throw (MyException);
-    Matrix(std::shared_ptr<std::vector<std::vector<float> > > elements_ptr)
+        MatrixMode mode=MatrixMode::balanced)
+        throw (MyException);
+    Matrix(const std::vector<std::vector<float> > &elements)
         throw (MyException);
 
-    std::vector<float> operator[](int idx);
-    int rows_number();
-    int columns_number();
-    bool is_square();
-    bool is_diagonal();
-    bool is_identity();
-    bool is_zero();
-    void print();
-    std::shared_ptr<Matrix> get_minor(int minor_row_idx, int minor_column_idx)
+    const Matrix operator*(const float number) const;
+    const Matrix operator*(const Matrix &other) const
         throw (MyException);
-    float det(DeterminantCalculationMode mode=DeterminantCalculationMode::top_row)
+
+    std::vector<float> operator[](const int idx) const
+        throw (MyException);
+
+    const int rows_number() const;
+    const int columns_number() const;
+
+    const bool is_square();
+    const bool is_diagonal();
+    const bool is_identity();
+    const bool is_zero();
+
+    void print() const;
+
+    Matrix get_minor(const int minor_row_idx, const int minor_column_idx)
+        const
+        throw (MyException);
+    const float det(
+        DeterminantCalculationMode mode=DeterminantCalculationMode::top_row)
+        const
         throw (MyException);
 private:
-    std::shared_ptr<std::vector<std::vector<float> > > _elements_ptr;
+    std::vector<std::vector<float> > _elements;
     /* Properties */
     bool _det_calculated;
     bool _det;
@@ -69,6 +82,6 @@ private:
         identity = 2,
         zero = 3
     };
-    bool _set_checked(_CheckedParameter parameter, bool value_to_set)
+    void _set_checked(_CheckedParameter parameter, bool value_to_set)
         throw (MyException);
 };

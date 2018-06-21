@@ -4,8 +4,8 @@
 #include <set>
 #include <vector>
 
-#include "../geometries/polygonal_polyhedron.hpp"
-#include "../geometries/polygonal_cylinder.hpp"
+#include "../geometry/polygonal_polyhedron.hpp"
+#include "../geometry/polygonal_cylinder.hpp"
 #include "../systems_architecture/polyhedronal_system.hpp"
 #include "../systems_architecture/ternary_polygonal_system.hpp"
 
@@ -13,13 +13,14 @@
 class PercolationChecker
 {
 public:
-    std::vector<std::pair<int, int> > get_intersections(
-        TernaryPolygonalSystem system);
+    const std::vector<std::pair<int, int> > get_intersections(
+        TernaryPolygonalSystem &system);
     void convert_intersections_into_percolation();
+    const bool percolation_along_x() const;
+    const bool percolation_along_y() const;
+    const bool percolation_along_z() const;
+
     void clean();
-    bool percolation_along_x();
-    bool percolation_along_y();
-    bool percolation_along_z();
 private:
     std::vector<std::pair<int, int> > _last_intersections_found;
     std::vector<int> _last_box_crosses_found;

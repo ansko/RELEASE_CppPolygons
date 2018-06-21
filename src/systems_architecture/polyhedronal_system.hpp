@@ -4,20 +4,21 @@
 #include <string>
 #include <vector>
 
-#include "../geometries/polygonal_polyhedron.hpp"
+#include "../geometry/polygonal_polyhedron.hpp"
 
 
 class PolyhedronalSystem
 {
 public:
-    PolyhedronalSystem(); // empty
+    PolyhedronalSystem();
     PolyhedronalSystem(
-        std::vector<std::vector<std::shared_ptr<PolygonalPolyhedron> > > phases);
-    std::vector<std::vector<std::shared_ptr<PolygonalPolyhedron> > > phases();
-    int phases_number();
-    std::string construction_method();
+        std::vector<std::vector<PolygonalPolyhedron> > &phases);
+
+    const std::vector<std::vector<PolygonalPolyhedron> > phases() const;
+    const int phases_number() const;
+    const std::string construction_method() const;
 protected:
     int _phases_number;
     std::string _construction_method;
-    std::vector<std::vector<std::shared_ptr<PolygonalPolyhedron> > > _phases;
+    std::vector<std::vector<PolygonalPolyhedron> > _phases;
 };

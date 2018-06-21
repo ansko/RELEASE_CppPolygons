@@ -7,8 +7,8 @@
 
 #include <math.h>
 
-#include "../geometries/plane.hpp"
-#include "../geometries/polygonal_cylinder.hpp"
+#include "../geometry/plane.hpp"
+#include "../geometry/polygonal_cylinder.hpp"
 #include "../settings/settings_parser.hpp"
 
 
@@ -16,8 +16,7 @@ class CSGPrinterPolygons
 {
 public:
     void print_CSG_ternary_reading_settings(
-         std::string fname,
-         std::vector<std::shared_ptr<PolygonalCylinder> > fil_ptrs,
-         std::vector<std::shared_ptr<PolygonalCylinder> > int_ptrs
-    );
+         const std::string fname,
+         const std::vector<PolygonalCylinder> &fil,
+         const std::vector<PolygonalCylinder> &she) const;
 };

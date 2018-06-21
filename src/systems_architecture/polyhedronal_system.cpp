@@ -5,21 +5,21 @@ PolyhedronalSystem::PolyhedronalSystem() {
 }
 
 PolyhedronalSystem::PolyhedronalSystem(
-    std::vector<std::vector<std::shared_ptr<PolygonalPolyhedron> > > phases) {
+    std::vector<std::vector<PolygonalPolyhedron> > &phases) {
         _phases_number = phases.size();
         _phases = phases;
 }
 
 
-std::vector<std::vector<std::shared_ptr<PolygonalPolyhedron> > >
-    PolyhedronalSystem::phases() {
+const std::vector<std::vector<PolygonalPolyhedron> > PolyhedronalSystem::phases()
+    const {
         return _phases;
 }
 
-int PolyhedronalSystem::phases_number() {
+const int PolyhedronalSystem::phases_number() const {
     return _phases_number;
 }
 
-std::string PolyhedronalSystem::construction_method() {
+const std::string PolyhedronalSystem::construction_method() const {
     return _construction_method;
 }
