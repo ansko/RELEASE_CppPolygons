@@ -12,7 +12,7 @@
 #include "polygonal_polyhedron.hpp"
 
 
-class PolygonalCylinder : PolygonalPolyhedron
+class PolygonalCylinder : private PolygonalPolyhedron
 {
 public:
     PolygonalCylinder(const PolygonalPolyhedron &polyhedron);
@@ -24,6 +24,7 @@ public:
     const Polygon top_facet() const;
     const Polygon bot_facet() const;
     const std::vector<Polygon> facets() const;
+    const std::vector<Polygon> all_polygons() const;
     const Point top_facet_center() const;
     const Point bot_facet_center() const;
     const float outer_radius() const;

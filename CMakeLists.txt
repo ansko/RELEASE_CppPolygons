@@ -46,3 +46,4 @@ set (SOURCES
 
 add_executable (MC_exfoliation ${HEADERS} ${SOURCES} MC_exfoliation.cpp)
 add_executable (mixing ${HEADERS} ${SOURCES} mixing.cpp)
+#add_executable (tester ${HEADERS} ${SOURCES} test.cpp)

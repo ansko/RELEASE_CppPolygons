@@ -94,6 +94,7 @@ const Point Plane::pt_cross() const {
 const bool Plane::is_crossed_by_line_segment(const LineSegment &ls) {
     const Point &pt_3 = ls.pt_beg();
     const Point &pt_4 = ls.pt_end();
+
     const Vector v01(_pt_0, _pt_1);
     const Vector v02(_pt_0, _pt_2);
     const Vector v03(_pt_0, pt_3);
@@ -108,13 +109,27 @@ const bool Plane::is_crossed_by_line_segment(const LineSegment &ls) {
     };
     const float det1 = Matrix(m_1_elements).det();
     const float det2 = Matrix(m_2_elements).det();
+
+ //   std::cout << "dets: " << det1 << " " << det2 << std::endl;
+
     if (std::abs(det1) > std::numeric_limits<float>::epsilon() &&
         std::abs(det2) > std::numeric_limits<float>::epsilon()) {
             if (det1 * det2 < 0) {
                 Vector vec_to_3(pt_3);
-                Vector vec_3_to_4(pt_3, pt_4);
+                Vector vec_3_to_4(pt_4, pt_3);
                 float coeff = std::abs(det1) / (std::abs(det1) + std::abs(det2));
+//                std::cout << "coeff: " << coeff << "\n";
+//                std::cout << "to3: " << vec_to_3.x() << " " << vec_to_3.y()
+//                                     << " " << vec_to_3.z() << "\n";
+//                std::cout << "34: " << vec_3_to_4.x() << " " << vec_3_to_4.y()
+//                                     << " " << vec_3_to_4.z() << "\n";
                 Vector v_to_cross_with_plane = vec_to_3 + vec_3_to_4 * coeff;
+
+                /*std::cout << "vec_cross: "
+                          << v_to_cross_with_plane.x() << " "
+                          << v_to_cross_with_plane.y() << " "
+                          << v_to_cross_with_plane.z() << std::endl;
+*/
                 _pt_cross = Point(v_to_cross_with_plane.x(),
                                   v_to_cross_with_plane.y(),
                                   v_to_cross_with_plane.z());

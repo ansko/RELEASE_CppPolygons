@@ -68,14 +68,32 @@ const bool TernaryPolygonalSystem::random_polygonal_cylinders(const float Lx,
                 continue;
             }
             bool flag_intersection_with_some_old = false;
+
+            bool flag_some_old_intersects_me = false;
+
             for(auto old_fil : _fillers)
                 if (next_fil.crosses_other_polygonal_cylinder(old_fil)) {
                     std::cout << " crosses other filler\n";
                     flag_intersection_with_some_old = true;
                     break;
                 }
+
+            for(auto old_fil : _fillers)
+                if (old_fil.crosses_other_polygonal_cylinder(next_fil)) {
+                    flag_some_old_intersects_me = true;
+                    break;
+                }
+
+
             if(flag_intersection_with_some_old)
                 continue;
+
+            if (flag_some_old_intersects_me)
+                std::cout << "me_other = " << flag_intersection_with_some_old
+                                           << std::endl
+                          << "other_me = " << flag_some_old_intersects_me
+                                           << std::endl;
+
             _fillers.push_back(next_fil);
             PolygonalCylinder shell(vertices_number,
                 thickness + 2 * shell_thickness, outer_radius + shell_thickness);
@@ -86,22 +104,36 @@ const bool TernaryPolygonalSystem::random_polygonal_cylinders(const float Lx,
             _shells.push_back(shell);
             std::cout << " appended\n";
         }
-    std::cout << "\n\n\t*** algorithm finished ***\n\n";
-    float pc_volume = 0.5 * outer_radius*outer_radius*sin(central_angle) *
-                      vertices_number;
-    float shVolume =  0.5 * (outer_radius + shell_thickness) *
-                            (outer_radius + shell_thickness) *
-                            sin(central_angle) *
-                      vertices_number;
-    float cube_volume = Lx * Ly * Lz;
-    std::cout << "volume fraction of filler = "
-              << pc_volume * _fillers.size() / cube_volume << std::endl;
-    std::cout << "number of particles in system = " << _fillers.size() << ", ";
-    std::cout << "number of attempts made = " << attempt << std::endl;
-    std::cout << "--polygonal_end--\n";
-    if (_fillers.size() == fillers_number)
-        return true;
-    return false;
+        _random_attempts_made = attempt;
+        // testing inside funs
+        bool flag_testing = false;
+        int num_ = _fillers.size();
+        for(int i = 0; i < num_; ++i)
+            for(int j = 0; j < num_; ++j) {
+                if (i == j)
+                    continue;
+                if (_fillers[i].crosses_other_polygonal_cylinder(
+                        _fillers[j]))
+                    flag_testing = true;
+            }
+        std::cout << "flag_testing (from ternary_polygonal_system) : "
+                  << flag_testing << std::endl;
+        std::cout << "\n\n\t*** algorithm finished ***\n\n";
+        float pc_volume = 0.5 * outer_radius * outer_radius * sin(central_angle) *
+                                vertices_number * thickness;
+        float shVolume =  0.5 * (outer_radius + shell_thickness) *
+                                (outer_radius + shell_thickness) *
+                                sin(central_angle) *
+                                vertices_number;
+        float cube_volume = Lx * Ly * Lz;
+        std::cout << "volume fraction of filler = "
+                  << pc_volume * _fillers.size() / cube_volume << std::endl;
+        std::cout << "number of particles in system = " << _fillers.size() << ", ";
+        std::cout << "number of attempts made = " << attempt << std::endl;
+        std::cout << "--polygonal_end--\n";
+        if (_fillers.size() == fillers_number)
+            return true;
+        return false;
 }
 
 
@@ -185,6 +217,9 @@ const float TernaryPolygonalSystem::Lz() const {
     return _Lz;
 }
 
+const int TernaryPolygonalSystem::random_attempts_made() const {
+    return _random_attempts_made;
+}
 
 const bool TernaryPolygonalSystem::mix() {
     const float big = 1;

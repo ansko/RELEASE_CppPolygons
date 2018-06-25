@@ -22,7 +22,7 @@ const Point Polygon::pt_center() const {
     }
     return Point(x / s, y / s, z / s);
 }
-
+/*
 const bool Polygon::crosses_other_polygon(const Polygon &other) const {
     Plane plane(_vertices[0], _vertices[1], _vertices[2]);
     const std::vector<Point> other_vertices = other.vertices();
@@ -61,18 +61,24 @@ const bool Polygon::crosses_other_polygon(const Polygon &other) const {
     }
     return false;
 };
-
-const bool Polygon::contains_point(const Point &pt_ptr) const {
-    int s = _vertices.size();
-    float x=0, y=0, z=0, other_x=0, other_y=0, other_z=0;
-    for (auto &vertex : _vertices) {
-        x += vertex.x();
-        y += vertex.y();
-        z += vertex.z();
+*/
+const bool Polygon::crosses_other_polygon(const Polygon &other) const {
+    Plane pl(other.vertices()[0], other.vertices()[1], other.vertices()[2]);
+    for (int idx = 0; idx < _vertices.size(); ++idx) {
+        Point pt1 = _vertices[idx],
+              pt2 = (idx > 0) ? _vertices[idx - 1]
+                              : _vertices[_vertices.size() - 1];
+        LineSegment ls(pt1, pt2);
+        bool cross = pl.is_crossed_by_line_segment(ls);
+        if (cross)
+            if(other.contains_point(pl.pt_cross()))
+                return true;
     }
-    x /= s;
-    y /= s;
-    z /= s;
+    return false;
+}
+
+const bool Polygon::contains_point(const Point &pt) const {
+    int s = _vertices.size();
     for(int i = 0; i < s; ++i) {
         Point pt_0, pt_1, pt_2;
         if (i == s - 1) {
@@ -88,13 +94,16 @@ const bool Polygon::contains_point(const Point &pt_ptr) const {
             pt_1 = _vertices[i + 1];
             pt_2 = _vertices[i + 2];
         }
-        Plane pl(pt_0, pt_1, pt_2);
-        const Vector v02(pt_0, pt_2);
-        const Vector v01(pt_0, pt_1);
-        const Vector v0pt(pt_0, pt_ptr);
-        const float volume = v02.cross_product(v01)
-                                .scalar_product(v01.cross_product(v0pt));
-        if (volume > std::numeric_limits<float>::epsilon())
+        float area012 =
+            Vector(pt_0, pt_1).cross_product(Vector(pt_0, pt_2)).length();
+        float area01 =
+            Vector(pt, pt_0).cross_product(Vector(pt, pt_1)).length();
+        float area02 =
+            Vector(pt, pt_2).cross_product(Vector(pt, pt_0)).length();
+        float area12 =
+            Vector(pt, pt_1).cross_product(Vector(pt, pt_2)).length();
+        float areas_difference = std::fabs(area012 - (area01+area02+area12));
+        if (areas_difference < std::numeric_limits<float>::epsilon())
             return true;
     }
     return false;

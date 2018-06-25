@@ -20,6 +20,7 @@ public:
     const float Lx() const;
     const float Ly() const;
     const float Lz() const;
+    const int random_attempts_made() const;
 
     const bool signle_tactoid(const float Lx, const float Ly, const float Lz,
         const int vertices_number, const float thickness,
@@ -34,6 +35,7 @@ protected:
     Orthobrick _matrix;
     std::vector<PolygonalCylinder> _fillers;
     std::vector<PolygonalCylinder> _shells;
+    int _random_attempts_made = 0;
     float _Lx = 0;
     float _Ly = 0;
     float _Lz = 0;

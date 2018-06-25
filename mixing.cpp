@@ -18,6 +18,7 @@
 int main(int argc, char**argv) {
     /*
        1.  Create system of tacroid made from polygonal cylinders
+               (aligned perpendicullarily to z)
        2.  Mix
        3.  Study percolation
     */
@@ -61,6 +62,9 @@ int main(int argc, char**argv) {
         throw MyException(std::string("no mixing steps specified in settings"));
     int mixing_steps = std::stoi(sp.get_setting(std::string("mixing_steps")));
     std::string output_fname = sp.get_setting(std::string("output_fname"));
+    std::string LOG = std::string("LOG");
+    if (sp.check_setting("LOG"))
+        LOG = sp.get_setting(std::string("LOG"));
     //making system
     TernaryPolygonalSystem ternary_system;
     bool status = ternary_system.signle_tactoid(
@@ -74,8 +78,23 @@ int main(int argc, char**argv) {
     // mixing
     {
         int steps_made = 0;
-        while (steps_made < mixing_steps)
+        int steps_tried = 0;
+        while (steps_made < mixing_steps) {
+            std::cout << "mixing, steps made " << steps_made
+                      << " / " << mixing_steps
+                      << " (steps tried: " << ++steps_tried << ")\n";
             steps_made += ternary_system.mix();
+        }
+    }
+    // check mixing quality
+    float order_parameter = 0;
+    int not_moved = 0;
+    for (auto fil : ternary_system.fillers()) {
+        Vector top_bot(fil.bot_facet_center(), fil.top_facet_center());
+        float tmp_order_parameter = std::abs(top_bot.z() / top_bot.length());
+        order_parameter += tmp_order_parameter;
+        if (tmp_order_parameter > 0.99)
+            ++not_moved;
     }
     p.print_CSG_ternary_reading_settings(
         "mixing_mixed.geo", ternary_system.fillers(), ternary_system.shells());
@@ -89,5 +108,42 @@ int main(int argc, char**argv) {
               << "along y: " << pc.percolation_along_y() << std::endl
               << "along z: " << pc.percolation_along_z() << std::endl
               << std::endl;
+    // checking prepared system that may be incorrect
+    //     for some unknown reason (check uses the same function
+    //                              and reveals error in system formation).
+    bool flag_testing = false;
+    auto fillers = ternary_system.fillers();
+    for (int i = 0; i < fillers.size(); ++i) {
+        auto polys_i = fillers[i].all_polygons();
+        for (int j = 0; j < fillers.size(); ++j) {
+            if (i == j)
+                continue;
+            auto polys_j = fillers[j].all_polygons();
+            for (auto pi : polys_i)
+                for (auto pj : polys_j)
+                    if (pi.crosses_other_polygon(pj)) {
+                        flag_testing = true;
+                        std::cout << "cross!\n";
+                        break;
+                    }
+        }
+    }
+    // logging
+    std::ofstream logger(LOG);
+    logger
+        << "mixing_single_tactoid (algorithm used)\n"
+        << status << " (status of system formation)\n"
+        << ternary_system.fillers().size() << " (number of fillers prepared)\n"
+        << disks_number << " (requested number of fillers)\n"
+        << max_attempts << " (possible max attempts number)\n"
+        << ternary_system.random_attempts_made() << " (real attempts number)\n"
+        << flag_testing << "  (flag_testing == is system ok)\n"
+        << intersections.size() << " (number of intersections in system)\n"
+        << pc.percolation_along_x() << " (percolation flag along x: )\n"
+        << pc.percolation_along_y() << " (percolation flag along y: )\n"
+        << pc.percolation_along_z() << " (percolation flag along z: )\n"
+        << not_moved << " (particles that seems not to move at any step)\n"
+        << order_parameter / ternary_system.fillers().size()
+            << " (average order parameter as 0th Chebushev's polynome)\n";
     return 0;
 }

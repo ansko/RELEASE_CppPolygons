@@ -128,6 +128,13 @@ const std::vector<Polygon> PolygonalCylinder::facets() const {
     return _facets;
 };
 
+const std::vector<Polygon> PolygonalCylinder::all_polygons() const {
+    std::vector<Polygon> all_polygons = _facets;
+    all_polygons.push_back(_top_facet);
+    all_polygons.push_back(_bot_facet);
+    return all_polygons;
+};
+
 const Polygon PolygonalCylinder::top_facet() const {
     return _top_facet;
 };
@@ -143,86 +150,15 @@ const float PolygonalCylinder::outer_radius() const {
 
 const bool PolygonalCylinder::crosses_other_polygonal_cylinder(
     const PolygonalCylinder &other) const {
-        Point tc = _top_facet_center,
-              bc = _bot_facet_center,
-              other_tc = other.top_facet().pt_center(),
-              other_bc = other.bot_facet().pt_center();
-        Vector vc = Vector(tc.x() + bc.x(), tc.y() + bc.y(), tc.z() + bc.z()) / 2;
-        Point c(vc.x(), vc.y(), vc.z());
-        Vector other_vc(other_tc.x() + other_bc.x(),
-                        other_tc.y() + other_bc.y(),
-                        other_tc.z() + other_bc.z());
-        other_vc = other_vc / 2;
-        Point other_c(other_vc.x(), other_vc.y(), other_vc.z());
-        float centers_distance = Vector(c, other_c).length();
-        float very_close_distance = std::min(_thickness, 2 * _inner_radius);
-        float very_far_distance = 2 * sqrt(_inner_radius * _inner_radius +
-                                           _thickness * _thickness/4);
-        if (centers_distance > very_far_distance)
-            return false;
-        else if (centers_distance < very_close_distance)
-            return true;
-        // starting precise checking
-        // if main axes of the cylinders lie on far lines
-        // http://en.wikipedia.org/wiki/Skew_lines#Distance_between_two_skew_lines
-        // x = x1 + td1 and x = x2 + td2
-        // d = |(d1 x d2) / |d1 x d2| * (x1 - x2)|
-        Point x1 = bc, x2 = other_bc;
-        Vector d1(x1, tc);
-        Vector d2(x2, other_tc);
-        Vector n = d1.cross_product(d2);
-        n = n / n.length();
-        Vector dx(x1, x2);
-        float d = fabs(n.scalar_product(dx));
-        if (d > 2 * _outer_radius)
-            return false;
-        std::vector<Polygon> polys = {_top_facet, _bot_facet},
-                             other_polys = {other.top_facet(), other.bot_facet()};
-        for (auto& facet : _facets)
-            polys.push_back(facet);
-        for (auto& facet : other.facets())
-            other_polys.push_back(facet);
-        Point this_center(tc.x()/2 + bc.x()/2,
-                          tc.y()/2 + bc.y()/2,
-                          tc.z()/2 + bc.z()/2);
-       Vector vec_this_center(c);
-       Vector vec_other_center(other_c);
-       int polys_size = polys.size();
-       for (int poly_idx = 0; poly_idx < polys_size; ++poly_idx) {
-           auto poly = polys[poly_idx];
-           Point poly_c = poly.pt_center();
-           Vector vec_this_center_poly_center(c, poly_c);
-           std::vector<Point> pts; // vertices of poly (this->polygons[poly_idx])
-                                   // polygons = top + bot + facets
-           for (auto vertex : poly.vertices()) {
-               Vector vec_this_center_vertex(c, vertex);
-               Vector vec_vertex = vec_this_center + vec_this_center_vertex;
-               vertex.update(vec_vertex.x(), vec_vertex.y(), vec_vertex.z());
-               pts.push_back(vertex);
-           }
-           poly = Polygon(pts);
-           int other_polys_size = other_polys.size();
-           for (int ohter_poly_idx = 0;
-                  ohter_poly_idx < other_polys_size;
-                    ++ohter_poly_idx) {
-               auto other_poly = other_polys[ohter_poly_idx];
-               Point other_poly_c = other_poly.pt_center();
-               Vector other_center_poly_center(other_c, other_poly_c);
-               std::vector<Point> other_pts; // vertices of other's poly
-                                          // (other_ptr->polygons[other_poly_idx])
-                                          // polygons = top + bot + facets
-               for (auto vertex : other_poly.vertices()) {
-                   Vector vec_other_center_vertex(other_c, vertex);
-                   Vector vec_vertex = vec_other_center + vec_other_center_vertex;
-                   vertex.update(vec_vertex.x(), vec_vertex.y(), vec_vertex.z());
-                   other_pts.push_back(vertex);
-               }
-               other_poly = Polygon(other_pts);
-               if (poly.crosses_other_polygon(other_poly))
-                   return true;
-           }
-       }
-       return false;
+        std::vector<Polygon> polys = this->all_polygons(),
+                       other_polys = other.all_polygons();
+        for (Polygon &poly : polys)
+            for (Polygon &other : other_polys)
+                if(poly.crosses_other_polygon(other) || // <- what is this???
+                                                        //    idk why but should be
+                   other.crosses_other_polygon(poly))
+                    return true;
+        return false;
 }
 
 const int PolygonalCylinder::crosses_box(const float Lx,
@@ -233,7 +169,7 @@ const int PolygonalCylinder::crosses_box(const float Lx,
             if (a > 0)
                 return a;
         }
-        return false;
+        return 0;
 };
 
 
