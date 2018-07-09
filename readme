@@ -1,0 +1,20 @@
+# RELEASE_CppPolygons
+An attetmpt to make the release version of CppPolygons tool that might be used in different tasks.
+
+# Settings
+Lx [Ly, Lz] - lengths of the parallelepiped cell (float)
+thickness - thickness of the disk-shaped filler (float)
+shell_thickness - additional thickness of the disk-shaped interface from every side, so complete thickness of the interface disk equals to the sum of thickness and 2 * shell_thickness (float)
+outer_radius - radius of the outer circumference of the disk's base polygon (float)
+vertices_number - number of vertices in the regular polygon that is base for the cylinder/disk (int)
+disks_number - desired number of fillers in the system; real number can be the same or less (int)
+max_attempts - maximum attempts number in the Monte-Carlo algorithm part (int)
+mixing_steps - maximum number of mixing steps in the mixing algorithm part, only successive step count, so may strongly influence on the calculation time (int)
+LOG - name of the log file (std::string)
+shape - shape of filler particles (and consequently interface), is made for future vercions (enum<std::string>('pc'))
+    pc - PolygonalCylinder
+
+Required for the mixed algorithm:
+ Lx, thickness, shell_thickness, outer_radius, vertices_number, disks_number, LOG, mixing_steps, shape
+Required for the mc algorithm:
+ Lx, thickness, shell_thickness, outer_radius, vertices_number, disks_number, LOG, max_attempts, shape
