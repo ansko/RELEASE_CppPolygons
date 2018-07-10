@@ -5,7 +5,7 @@ set (PROJECT polygons)
 project (${PROJECT}) 
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -std=c++17 -g -lm")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -std=c++17 -g -lm  -O3")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
 set (HEADERS
