@@ -16,7 +16,13 @@ void CSGPrinterPolygons::print_CSG_ternary_reading_settings(
     };
     std::ofstream fout;
     fout.open(fname);
-    SettingsParser sp("settings");
+
+    // somehow the task name should be passed here and settings file name too!
+        std::string task_name("MC");
+        std::string settings_filename("settings_cpp");
+    // this hard code should be removed!
+
+    SettingsParser sp(settings_filename, task_name);
     for (std::string key : required_settings)
         if (!sp.check_setting(key)) {
             std::cout << "Required setting is not set: " << key << std::endl;

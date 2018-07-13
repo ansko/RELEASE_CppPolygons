@@ -18,8 +18,12 @@ int main(int argc, char**argv) {
        1.  Create system of polygonal cylinders by monte-carlo method
        2.  Study percolation
     */
+    if (argc < 2) {
+        std::cout << "Not enuogh arguments\n";
+        return 0;
+    }
     std::string taks_name("ternary_polygonal_cylinders");
-    SettingsParser sp("settings", "MC");
+    SettingsParser sp(std::string(argv[1]), "MC");
     if (!sp.success_of_parsing()) {
         std::cout << "Error: parsed settings are not OK\n";
         return 0;
@@ -85,7 +89,8 @@ int main(int argc, char**argv) {
     //output
     CSGPrinterPolygons p;
     p.print_CSG_ternary_reading_settings(
-        "MC_exfoliation.geo", ternary_system.fillers(), ternary_system.shells());
+        sp.get_setting(std::string("geo_fname")), ternary_system.fillers(),
+        ternary_system.shells());
     // study percolation
     PercolationChecker pc;
     std::vector<std::pair<int, int> > intersections =
