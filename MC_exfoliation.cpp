@@ -90,7 +90,7 @@ int main(int argc, char**argv) {
     CSGPrinterPolygons p;
     p.print_CSG_ternary_reading_settings(
         sp.get_setting(std::string("geo_fname")), ternary_system.fillers(),
-        ternary_system.shells());
+        ternary_system.shells(), std::string(argv[1]));
     // study percolation
     PercolationChecker pc;
     std::vector<std::pair<int, int> > intersections =

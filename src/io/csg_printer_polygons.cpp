@@ -4,7 +4,8 @@
 void CSGPrinterPolygons::print_CSG_ternary_reading_settings(
     const std::string fname,
     const std::vector<PolygonalCylinder> &fils,
-    const std::vector<PolygonalCylinder> &shes) const {
+    const std::vector<PolygonalCylinder> &shes,
+    const std::string settings_fname) const {
         if (fils.size() == 0 && shes.size() == 0)
             throw MyException(std::string("Warning: empty ternary system"));
     std::vector<std::string> required_settings = {
@@ -17,12 +18,9 @@ void CSGPrinterPolygons::print_CSG_ternary_reading_settings(
     std::ofstream fout;
     fout.open(fname);
 
-    // somehow the task name should be passed here and settings file name too!
-        std::string task_name("MC");
-        std::string settings_filename("settings_cpp");
-    // this hard code should be removed!
+    std::string task_name("MC");
 
-    SettingsParser sp(settings_filename, task_name);
+    SettingsParser sp(settings_fname, task_name);
     for (std::string key : required_settings)
         if (!sp.check_setting(key)) {
             std::cout << "Required setting is not set: " << key << std::endl;

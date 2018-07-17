@@ -74,7 +74,8 @@ int main(int argc, char**argv) {
     //output
     CSGPrinterPolygons p;
     p.print_CSG_ternary_reading_settings(
-        "mixing_start.geo", ternary_system.fillers(), ternary_system.shells());
+        "mixing_start.geo", ternary_system.fillers(), ternary_system.shells(),
+        std::string(argv[0]));
     // mixing
     {
         int steps_made = 0;
@@ -97,7 +98,8 @@ int main(int argc, char**argv) {
             ++not_moved;
     }
     p.print_CSG_ternary_reading_settings(
-        "mixing_mixed.geo", ternary_system.fillers(), ternary_system.shells());
+        "mixing_mixed.geo", ternary_system.fillers(), ternary_system.shells(),
+        std::string(argv[0]));
     // study percolation
     PercolationChecker pc;
     std::vector<std::pair<int, int> > intersections =
