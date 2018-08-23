@@ -15,8 +15,7 @@
 
 int main(int argc, char**argv) {
     /*
-       1.  Create system of polygonal cylinders by monte-carlo method
-       2.  Study percolation
+       usage: ./MC_exfoliation settings_fname
     */
     if (argc < 2) {
         std::cout << "Not enuogh arguments\n";

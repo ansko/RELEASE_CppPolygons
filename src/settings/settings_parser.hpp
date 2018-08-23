@@ -26,7 +26,7 @@ private:
     std::vector<std::string> _required_settings_anytime = {
         std::string("Lx"),
         std::string("shape"),
-        std::string("fillers_number"),
+        std::string("disks_number"),
     };
     std::vector<std::string> _required_settings_ternary_polygonal_cylinders = {
         std::string("thickness"),

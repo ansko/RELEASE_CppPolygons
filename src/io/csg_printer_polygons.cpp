@@ -130,11 +130,20 @@ void CSGPrinterPolygons::print_CSG_ternary_reading_settings(
     }
     fout << fillers_string << ";" << std::endl;
     fout << shells_string << ";" << std::endl;
-    fout << "\ntlo filler;\n";
+    fout << "\ntlo filler";
+    if (sp.check_setting("maxh_filler"))
+        fout << " -maxh=" << sp.get_setting("maxh_filler");
+    fout << ";\n";
     fout << "solid interface = shells and not filler;\n";
-    fout << "tlo interface -transparent;\n";
+    fout << "tlo interface -transparent";
+    if (sp.check_setting("maxh_interface"))
+        fout << " -maxh=" << sp.get_setting("maxh_interface");
+    fout << ";\n";
     fout << "solid matrix = not shells and cell;\n";
-    fout << "tlo matrix -transparent;\n";    
+    fout << "tlo matrix -transparent";
+    if (sp.check_setting("maxh_matrix"))
+        fout << " -maxh=" << sp.get_setting("maxh_matrix");
+    fout << ";\n";
     fout.close();
     return;
 };

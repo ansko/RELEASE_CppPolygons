@@ -9,21 +9,27 @@ SettingsParser::SettingsParser(std::string settings_fname, std::string task_name
     std::string key;
     std::string value;
     while(fin >> key && fin >> value) {
-        _settings.insert(std::pair<std::string, std::string>(
-            std::make_pair(key, value)));
+       // _settings.insert(std::pair<std::string, std::string>(
+       //     std::make_pair(key, value)));
+       _settings[key] = value;
     }
     fin.close();
 
+    for (auto setting_out : _settings)
+        std::cout << setting_out.first << " " << setting_out.second << "\n";
+
     for (auto required : _required_settings_anytime) {
-        if (!check_setting(key)) {
-            std::cout << "Required setting is not set: " << key << std::endl;
+        if (!check_setting(required)) {
+            std::cout << "Required setting is not set (anytime): "
+                      << required << std::endl;
             return;
         }
     }
     if (_required_settings_specific.count(task_name) != 0)
         for (auto required : _required_settings_specific[task_name]) {
-            if (!check_setting(key)) {
-                std::cout << "Required setting is not set: " << key << std::endl;
+            if (!check_setting(required)) {
+                std::cout << "Required setting is not set: (specific)"
+                          << required << std::endl;
                 return;
             }
         }
