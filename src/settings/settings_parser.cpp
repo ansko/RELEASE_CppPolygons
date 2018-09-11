@@ -39,21 +39,6 @@ SettingsParser::SettingsParser(std::string settings_fname, std::string task_name
     return;
 }
 
-// should be removed!
-SettingsParser::SettingsParser(std::string settings_fname) {
-    _settings_fname = settings_fname;
-    std::ifstream fin(_settings_fname);
-    std::string key;
-    std::string value;
-    while(fin >> key && fin >> value) {
-        _settings.insert(std::pair<std::string, std::string>(
-            std::make_pair(key, value)));
-    }
-    fin.close();
-
-    return;
-}
-
 std::string SettingsParser::get_setting(std::string key) {
     return _settings[key];
 }

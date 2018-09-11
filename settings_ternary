@@ -1,0 +1,11 @@
+Lx 5
+thickness 0.1
+shell_thickness 0.1
+outer_radius 1
+vertices_number 3
+disks_number 5
+max_attempts 100
+LOG polys_log
+maxh_filler 0.03
+maxh_interface 0.03
+geo_fname out.geo

@@ -20,4 +20,9 @@ public:
          const std::vector<PolygonalCylinder> &fil,
          const std::vector<PolygonalCylinder> &she,
          const std::string settgins_fname) const;
+
+    void print_CSG_binary_reading_settings(
+         const std::string fname,
+         const std::vector<PolygonalCylinder> &fil,
+         const std::string settgins_fname) const;
 };

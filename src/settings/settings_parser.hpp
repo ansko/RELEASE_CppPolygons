@@ -10,7 +10,6 @@
 class SettingsParser
 {
 public:
-    SettingsParser(std::string settings_fname);  // old, should be removed
     SettingsParser(std::string settings_fname, std::string task_name);
     std::string get_setting(std::string key);
     void print();
@@ -25,7 +24,7 @@ private:
     bool _success_of_parsing=false;
     std::vector<std::string> _required_settings_anytime = {
         std::string("Lx"),
-        std::string("shape"),
+        //std::string("shape"),
         std::string("disks_number"),
     };
     std::vector<std::string> _required_settings_ternary_polygonal_cylinders = {

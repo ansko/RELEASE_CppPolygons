@@ -8,7 +8,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -std=c++17 -g -lm  -O3")
 endif (CMAKE_COMPILER_IS_GNUCXX)
 
-set (HEADERS
+set (COMMON_HEADERS
     src/geometry/point.hpp
     src/algebra/vector.hpp
     src/algebra/matrix.hpp
@@ -22,11 +22,8 @@ set (HEADERS
     src/settings/settings_parser.hpp
     src/io/csg_printer_polygons.hpp
     src/systems_architecture/polyhedronal_system.hpp
-    src/systems_architecture/ternary_polygonal_system.hpp
-    src/percolation/percolation_checker.hpp
 )
-
-set (SOURCES
+set (COMMON_SOURCES
     src/geometry/point.cpp
     src/algebra/vector.cpp
     src/algebra/matrix.cpp
@@ -40,10 +37,35 @@ set (SOURCES
     src/settings/settings_parser.cpp
     src/io/csg_printer_polygons.cpp
     src/systems_architecture/polyhedronal_system.cpp
+)
+
+set (TERNARY_HEADERS
+    src/systems_architecture/ternary_polygonal_system.hpp
+    src/percolation/percolation_checker.hpp
+)
+set (TERNARY_SOURCES
     src/systems_architecture/ternary_polygonal_system.cpp
     src/percolation/percolation_checker.cpp
 )
 
-add_executable (MC_exfoliation ${HEADERS} ${SOURCES} MC_exfoliation.cpp)
-add_executable (mixing ${HEADERS} ${SOURCES} mixing.cpp)
-#add_executable (tester ${HEADERS} ${SOURCES} test.cpp)
+set (BINARY_HEADERS
+    src/systems_architecture/binary_polygonal_system.hpp
+)
+set (BINARY_SOURCES
+    src/systems_architecture/binary_polygonal_system.cpp
+)
+
+
+add_executable (ternary_mc
+    ${COMMON_HEADERS} ${TERNARY_HEADERS}
+    ${COMMON_SOURCES} ${TERNARY_SOURCES}
+    ternary_mc.cpp)
+add_executable (ternary_mix
+    ${COMMON_HEADERS} ${TERNARY_HEADERS}
+    ${COMMON_SOURCES} ${TERNARY_SOURCES}
+    ternary_mix.cpp)
+
+add_executable (binary_mc
+    ${COMMON_HEADERS} ${BINARY_HEADERS}
+    ${COMMON_SOURCES} ${BINARY_SOURCES}
+    binary_mc.cpp)
