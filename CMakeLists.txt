@@ -17,6 +17,7 @@ set (COMMON_HEADERS
     src/geometry/orthobrick.hpp
     src/geometry/plane.hpp
     src/geometry/polygon.hpp
+    src/geometry/sphere.hpp
     src/geometry/polygonal_polyhedron.hpp
     src/geometry/polygonal_cylinder.hpp
     src/settings/settings_parser.hpp
@@ -32,6 +33,7 @@ set (COMMON_SOURCES
     src/geometry/orthobrick.cpp
     src/geometry/plane.cpp
     src/geometry/polygon.cpp
+    src/geometry/sphere.cpp
     src/geometry/polygonal_polyhedron.cpp
     src/geometry/polygonal_cylinder.cpp
     src/settings/settings_parser.cpp
@@ -69,3 +71,8 @@ add_executable (binary_mc
     ${COMMON_HEADERS} ${BINARY_HEADERS}
     ${COMMON_SOURCES} ${BINARY_SOURCES}
     binary_mc.cpp)
+
+add_executable (spheres_mc
+    ${COMMON_HEADERS} ${BINARY_HEADERS}
+    ${COMMON_SOURCES} ${BINARY_SOURCES}
+    make_spheres.cpp)

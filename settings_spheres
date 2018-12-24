@@ -1,0 +1,9 @@
+Lx 5
+radius 0.1
+shell_thickness 0.1
+spheres_number 5
+max_attempts 100
+LOG spheres_log
+maxh_filler 0.03
+maxh_interface 0.03
+geo_fname out.geo
