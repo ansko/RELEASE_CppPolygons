@@ -2,7 +2,7 @@
 
 
 Matrix::Matrix(const int rows_number, const int columns_number, MatrixMode mode)
-    throw (MyException) {
+{
     if (rows_number <= 0 || columns_number <= 0)
         throw MyException(std::string("incorrect matrix size"));
     for (int row_idx = 0; row_idx < rows_number; ++row_idx) {
@@ -15,7 +15,7 @@ Matrix::Matrix(const int rows_number, const int columns_number, MatrixMode mode)
 }
 
 Matrix::Matrix(const std::vector<std::vector<float> > &elements)
-        throw (MyException) {
+{
     int rows_number = elements.size();
     if (rows_number <= 0)
         throw MyException(std::string("incorrect matrix size"));
@@ -42,7 +42,7 @@ const Matrix Matrix::operator*(const float number) const {
     return Matrix(elements);
 }
 
-const Matrix Matrix::operator*(const Matrix &other) const throw (MyException) {
+const Matrix Matrix::operator*(const Matrix &other) const {
     if (_columns_number != other.rows_number())
         throw MyException(
             std::string("Error: inconsistent size when multiplying matrices"));
@@ -62,7 +62,7 @@ const Matrix Matrix::operator*(const Matrix &other) const throw (MyException) {
     return Matrix(elements);
 }
 
-std::vector<float> Matrix::operator[](const int idx) const throw(MyException) {
+std::vector<float> Matrix::operator[](const int idx) const {
     if (idx > _columns_number)
         throw MyException(std::string("Matrix::operator[]: index out of range"));
     return _elements[idx];
@@ -78,7 +78,7 @@ const int Matrix::columns_number() const{
 }
 
 void Matrix::_set_checked(_CheckedParameter parameter, bool value_to_set)
-throw (MyException) {
+{
     if (parameter == _CheckedParameter::square) {
         _is_square_checked = true;
         _is_square = value_to_set;
@@ -172,7 +172,7 @@ void Matrix::print() const {
 
 Matrix Matrix::get_minor(const int minor_row_idx, const int minor_column_idx)
         const
-        throw (MyException) {
+{
     if (minor_row_idx >= _rows_number || minor_column_idx >= _columns_number)
         throw MyException("Index out of range");
     std::vector<std::vector<float> > minor_elements;
@@ -192,7 +192,7 @@ Matrix Matrix::get_minor(const int minor_row_idx, const int minor_column_idx)
 }
 
 const float Matrix::det(
-    DeterminantCalculationMode mode) const throw (MyException) {
+    DeterminantCalculationMode mode) const {
         if (_is_square_checked && !_is_square ||
                 (!_is_square_checked && (_columns_number != _rows_number)))
                     throw MyException("Determinant of matix that is not square");

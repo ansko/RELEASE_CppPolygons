@@ -1,7 +1,7 @@
 #include "vector.hpp"
 
 
-Vector::Vector(const Matrix &m) throw(MyException) : Matrix(1, 3) {
+Vector::Vector(const Matrix &m) : Matrix(1, 3) {
     if (m.columns_number() != 3 or m.rows_number() != 1)
         throw MyException(
             std::string("Vector::Vector(Matrix): incorrect matrix size"));
@@ -47,7 +47,7 @@ const Vector Vector::operator*(const float  number) const {
     return Vector(x, y, z);
 }
 
-const Vector Vector::operator*(const Matrix &m) const throw(MyException) {
+const Vector Vector::operator*(const Matrix &m) const {
     if (m.columns_number() < 3 || m.rows_number() < 3)
         throw MyException(
             std::string("Vector::operator*(Matrix): incorrect matrix size"));
@@ -57,7 +57,7 @@ const Vector Vector::operator*(const Matrix &m) const throw(MyException) {
     return Vector(x, y, z);
 }
 
-const Vector Vector::operator/(const float number) const throw(MyException) {
+const Vector Vector::operator/(const float number) const {
     if (std::abs(number) < std::numeric_limits<float>::epsilon())
         throw MyException(std::string("Vector::operator/: division by 0"));
     float x = _x * number;
