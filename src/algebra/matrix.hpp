@@ -30,17 +30,13 @@ class Matrix
 {
 public:
     Matrix(int rows_number, int columns_number,
-        MatrixMode mode=MatrixMode::balanced)
-        throw (MyException);
-    Matrix(const std::vector<std::vector<float> > &elements)
-        throw (MyException);
+        MatrixMode mode=MatrixMode::balanced);
+    Matrix(const std::vector<std::vector<float> > &elements);
 
     const Matrix operator*(const float number) const;
-    const Matrix operator*(const Matrix &other) const
-        throw (MyException);
+    const Matrix operator*(const Matrix &other) const;
 
-    std::vector<float> operator[](const int idx) const
-        throw (MyException);
+    std::vector<float> operator[](const int idx) const;
 
     const int rows_number() const;
     const int columns_number() const;
@@ -53,12 +49,10 @@ public:
     void print() const;
 
     Matrix get_minor(const int minor_row_idx, const int minor_column_idx)
-        const
-        throw (MyException);
+        const;
     const float det(
         DeterminantCalculationMode mode=DeterminantCalculationMode::top_row)
-        const
-        throw (MyException);
+        const;
 private:
     std::vector<std::vector<float> > _elements;
     /* Properties */
@@ -82,6 +76,5 @@ private:
         identity = 2,
         zero = 3
     };
-    void _set_checked(_CheckedParameter parameter, bool value_to_set)
-        throw (MyException);
+    void _set_checked(_CheckedParameter parameter, bool value_to_set);
 };
