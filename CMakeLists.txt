@@ -61,18 +61,18 @@ set (BINARY_SOURCES
 add_executable (ternary_mc
     ${COMMON_HEADERS} ${TERNARY_HEADERS}
     ${COMMON_SOURCES} ${TERNARY_SOURCES}
-    ternary_mc.cpp)
+    ternary_disks_mc.cpp)
 add_executable (ternary_mix
     ${COMMON_HEADERS} ${TERNARY_HEADERS}
     ${COMMON_SOURCES} ${TERNARY_SOURCES}
-    ternary_mix.cpp)
+    ternary_disks_mix.cpp)
 
 add_executable (binary_mc
     ${COMMON_HEADERS} ${BINARY_HEADERS}
     ${COMMON_SOURCES} ${BINARY_SOURCES}
-    binary_mc.cpp)
+    binary_disks_mc.cpp)
 
 add_executable (spheres_mc
     ${COMMON_HEADERS} ${BINARY_HEADERS}
     ${COMMON_SOURCES} ${BINARY_SOURCES}
-    make_spheres.cpp)
+    ternary_spheres_mc.cpp)
